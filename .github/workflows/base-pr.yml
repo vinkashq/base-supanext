@@ -28,3 +28,5 @@ jobs:
       - name: Create PR
         run: |
           gh pr create --title "Merge base changes" --body "Auto PR for Upstream Changes" --base main --head base
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
