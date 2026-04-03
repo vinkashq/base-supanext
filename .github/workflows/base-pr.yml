@@ -1,0 +1,49 @@
+name: Base PR
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  base-pr:
+    if: github.repository != 'vinkashq/base'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate an app token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - uses: actions/checkout@v6
+        with:
+          ref: "base"
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Add Upstream Remote
+        run: |
+          git remote add upstream https://github.com/vinkashq/base.git
+          git fetch upstream
+      - name: Merge Upstream
+        run: |
+          git merge upstream/main --no-edit
+          git push origin base
+      - name: Create PR
+        run: |
+          if [ -n "$(git log origin/main..base)" ]; then
+            gh pr list --head base --base main --state open --json number --jq '.[0].number' | grep -q . \
+              || gh pr create \
+                --title "Merge base changes" \
+                --body "Auto PR for Upstream Changes" \
+                --base main \
+                --head base
+          else
+            echo "No changes to merge."
+          fi
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
