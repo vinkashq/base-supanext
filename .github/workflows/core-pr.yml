@@ -1,0 +1,49 @@
+name: Core PR
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  core-pr:
+    if: github.repository != 'vinkashq/core'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate an app token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      - uses: actions/checkout@v6
+        with:
+          ref: "core"
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+      - name: Add Upstream Remote
+        run: |
+          git remote add upstream https://github.com/vinkashq/core.git
+          git fetch upstream
+      - name: Merge Upstream
+        run: |
+          git merge upstream/main --no-edit
+          git push origin core
+      - name: Create PR
+        run: |
+          if [ -n "$(git log origin/main..core)" ]; then
+            gh pr list --head core --base main --state open --json number --jq '.[0].number' | grep -q . \
+              || gh pr create \
+                --title "Merge core changes" \
+                --body "Auto PR for Upstream Changes" \
+                --base main \
+                --head core
+          else
+            echo "No changes to merge."
+          fi
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
