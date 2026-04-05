@@ -1,10 +1,9 @@
 {
-  "name": "@vinkas/base-next",
+  "name": "@vinkas/core-next",
   "version": "0.1.0",
   "private": true,
-  "repository": "https://github.com/vinkashq/base-next",
+  "repository": "https://github.com/vinkashq/core-next",
   "author": "Vinkas",
-  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
