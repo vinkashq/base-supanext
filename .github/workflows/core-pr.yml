@@ -1,4 +1,4 @@
-name: Base PR
+name: Core PR
 
 on:
   schedule:
@@ -10,8 +10,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  base-pr:
-    if: github.repository != 'vinkashq/base'
+  core-pr:
+    if: github.repository != 'vinkashq/core'
     runs-on: ubuntu-latest
     steps:
       - name: Generate an app token
@@ -22,26 +22,26 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - uses: actions/checkout@v6
         with:
-          ref: "base"
+          ref: "core"
           fetch-depth: 0
           token: ${{ steps.app-token.outputs.token }}
       - name: Add Upstream Remote
         run: |
-          git remote add upstream https://github.com/vinkashq/base.git
+          git remote add upstream https://github.com/vinkashq/core.git
           git fetch upstream
       - name: Merge Upstream
         run: |
           git merge upstream/main --no-edit
-          git push origin base
+          git push origin core
       - name: Create PR
         run: |
-          if [ -n "$(git log origin/main..base)" ]; then
-            gh pr list --head base --base main --state open --json number --jq '.[0].number' | grep -q . \
+          if [ -n "$(git log origin/main..core)" ]; then
+            gh pr list --head core --base main --state open --json number --jq '.[0].number' | grep -q . \
               || gh pr create \
-                --title "Merge base changes" \
+                --title "Merge core changes" \
                 --body "Auto PR for Upstream Changes" \
                 --base main \
-                --head base
+                --head core
           else
             echo "No changes to merge."
           fi
