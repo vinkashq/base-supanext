@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@base-ui/react':
         specifier: ^1.3.0
-        version: 1.3.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 1.3.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.5))(react@19.2.5)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -19,19 +19,19 @@ importers:
         version: 2.1.1
       lucide-react:
         specifier: ^1.8.0
-        version: 1.8.0(react@19.2.4)
+        version: 1.8.0(react@19.2.5)
       next:
         specifier: 16.2.3
-        version: 16.2.3(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 16.2.3(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.5))(react@19.2.5)
       next-themes:
         specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        version: 0.4.6(react-dom@19.2.4(react@19.2.5))(react@19.2.5)
       react:
-        specifier: 19.2.4
-        version: 19.2.4
+        specifier: 19.2.5
+        version: 19.2.5
       react-dom:
         specifier: 19.2.4
-        version: 19.2.4(react@19.2.4)
+        version: 19.2.4(react@19.2.5)
       shadcn:
         specifier: ^4.2.0
         version: 4.2.0(@types/node@25.6.0)(typescript@6.0.2)
@@ -2447,8 +2447,8 @@ packages:
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
-  react@19.2.4:
-    resolution: {integrity: sha512-9nfp2hYpCwOjAN+8TZFGhtWEwgvWHXqESH8qT89AT/lWklpLON22Lc8pEtnpsZz7VmawabSU0gCjnj8aC0euHQ==}
+  react@19.2.5:
+    resolution: {integrity: sha512-llUJLzz1zTUBrskt2pwZgLq59AemifIftw4aB7JxOqf1HY2FDaGDxgwpAPVzHU1kdWabH7FauP4i1oEeer2WCA==}
     engines: {node: '>=0.10.0'}
 
   recast@0.23.11:
@@ -3146,27 +3146,27 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@base-ui/react@1.3.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@base-ui/react@1.3.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.5))(react@19.2.5)':
     dependencies:
       '@babel/runtime': 7.29.2
-      '@base-ui/utils': 0.2.6(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@floating-ui/react-dom': 2.1.8(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      '@base-ui/utils': 0.2.6(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.5))(react@19.2.5)
+      '@floating-ui/react-dom': 2.1.8(react-dom@19.2.4(react@19.2.5))(react@19.2.5)
       '@floating-ui/utils': 0.2.11
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
+      react: 19.2.5
+      react-dom: 19.2.4(react@19.2.5)
       tabbable: 6.4.0
-      use-sync-external-store: 1.6.0(react@19.2.4)
+      use-sync-external-store: 1.6.0(react@19.2.5)
     optionalDependencies:
       '@types/react': 19.2.14
 
-  '@base-ui/utils@0.2.6(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@base-ui/utils@0.2.6(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.5))(react@19.2.5)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@floating-ui/utils': 0.2.11
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
+      react: 19.2.5
+      react-dom: 19.2.4(react@19.2.5)
       reselect: 5.1.1
-      use-sync-external-store: 1.6.0(react@19.2.4)
+      use-sync-external-store: 1.6.0(react@19.2.5)
     optionalDependencies:
       '@types/react': 19.2.14
 
@@ -3257,11 +3257,11 @@ snapshots:
       '@floating-ui/core': 1.7.5
       '@floating-ui/utils': 0.2.11
 
-  '@floating-ui/react-dom@2.1.8(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+  '@floating-ui/react-dom@2.1.8(react-dom@19.2.4(react@19.2.5))(react@19.2.5)':
     dependencies:
       '@floating-ui/dom': 1.7.6
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
+      react: 19.2.5
+      react-dom: 19.2.4(react@19.2.5)
 
   '@floating-ui/utils@0.2.11': {}
 
@@ -5096,9 +5096,9 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@1.8.0(react@19.2.4):
+  lucide-react@1.8.0(react@19.2.5):
     dependencies:
-      react: 19.2.4
+      react: 19.2.5
 
   magic-string@0.30.21:
     dependencies:
@@ -5176,21 +5176,21 @@ snapshots:
 
   negotiator@1.0.0: {}
 
-  next-themes@0.4.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  next-themes@0.4.6(react-dom@19.2.4(react@19.2.5))(react@19.2.5):
     dependencies:
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
+      react: 19.2.5
+      react-dom: 19.2.4(react@19.2.5)
 
-  next@16.2.3(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  next@16.2.3(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.5))(react@19.2.5):
     dependencies:
       '@next/env': 16.2.3
       '@swc/helpers': 0.5.15
       baseline-browser-mapping: 2.10.18
       caniuse-lite: 1.0.30001787
       postcss: 8.4.31
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-      styled-jsx: 5.1.6(@babel/core@7.29.0)(react@19.2.4)
+      react: 19.2.5
+      react-dom: 19.2.4(react@19.2.5)
+      styled-jsx: 5.1.6(@babel/core@7.29.0)(react@19.2.5)
     optionalDependencies:
       '@next/swc-darwin-arm64': 16.2.3
       '@next/swc-darwin-x64': 16.2.3
@@ -5434,14 +5434,14 @@ snapshots:
       iconv-lite: 0.7.2
       unpipe: 1.0.0
 
-  react-dom@19.2.4(react@19.2.4):
+  react-dom@19.2.4(react@19.2.5):
     dependencies:
-      react: 19.2.4
+      react: 19.2.5
       scheduler: 0.27.0
 
   react-is@16.13.1: {}
 
-  react@19.2.4: {}
+  react@19.2.5: {}
 
   recast@0.23.11:
     dependencies:
@@ -5807,10 +5807,10 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  styled-jsx@5.1.6(@babel/core@7.29.0)(react@19.2.4):
+  styled-jsx@5.1.6(@babel/core@7.29.0)(react@19.2.5):
     dependencies:
       client-only: 0.0.1
-      react: 19.2.4
+      react: 19.2.5
     optionalDependencies:
       '@babel/core': 7.29.0
 
@@ -5990,9 +5990,9 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  use-sync-external-store@1.6.0(react@19.2.4):
+  use-sync-external-store@1.6.0(react@19.2.5):
     dependencies:
-      react: 19.2.4
+      react: 19.2.5
 
   util-deprecate@1.0.2: {}
 
