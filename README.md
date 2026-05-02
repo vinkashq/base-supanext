@@ -1,4 +1,4 @@
-#### Next.js
+#### Next.js + Supabase
 
 # Vinkas Base
 
