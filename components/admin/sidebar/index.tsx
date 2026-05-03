@@ -4,7 +4,9 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
+  SidebarMenu,
 } from "@/components/ui/sidebar"
+import UserMenuItem from "./user-menu-item"
 
 export default function AdminSidebar() {
   return (
@@ -14,7 +16,11 @@ export default function AdminSidebar() {
         <SidebarGroup />
         <SidebarGroup />
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter>
+        <SidebarMenu>
+          <UserMenuItem />
+        </SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   )
 }
