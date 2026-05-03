@@ -1,7 +1,6 @@
 'use client'
 
-import { useCurrentUserImage } from '@/hooks/use-current-user-image'
-import { useCurrentUserName } from '@/hooks/use-current-user-name'
+import { useCurrentUserName, useCurrentUserImage } from '@/hooks/use-current-user'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export const CurrentUserAvatar = () => {

@@ -1,7 +1,7 @@
-import { CurrentUserAvatar } from "../current-user-avatar"
 import { Button } from "../ui/button"
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "../ui/navigation-menu"
 import Link from "next/link"
+import UserMenu from "./user-menu"
 
 export default function Header() {
   return (
@@ -18,7 +18,7 @@ export default function Header() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <CurrentUserAvatar />
+          <UserMenu />
         </div>
       </div>
     </header>

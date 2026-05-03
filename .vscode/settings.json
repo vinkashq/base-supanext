@@ -18,7 +18,9 @@
     "http",
     "net"
   ],
+  "typescript.format.semicolons": "remove",
   "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "editor.formatOnSave": true
   }
 }
