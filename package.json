@@ -1,10 +1,9 @@
 {
-  "name": "@vinkas/base-supanext",
+  "name": "@vinkas/core-supanext",
   "version": "0.1.0",
   "private": true,
   "repository": "https://github.com/vinkashq/base-supanext",
   "author": "Vinkas",
-  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
