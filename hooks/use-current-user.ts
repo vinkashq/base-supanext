@@ -4,32 +4,23 @@ import { createClient } from "@/lib/supabase/client"
 import { User } from "@supabase/supabase-js"
 
 export const useCurrentUser = () => {
-  const [user, setUser] = useState<User | undefined>()
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await createClient().auth.getSession()
-      if (error) {
-        console.error(error)
-      }
+    const supabase = createClient()
 
-      setUser(data.session?.user)
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+    })
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_, session) => {
+      setUser(session?.user || null)
+    })
+
+    return () => {
+      listener.subscription.unsubscribe()
     }
-
-    fetchUser()
   }, [])
 
   return user
-}
-
-export const useCurrentUserName = () => {
-  const user = useCurrentUser()
-  if (!user) return null
-  return user.user_metadata.full_name as string
-}
-
-export const useCurrentUserImage = () => {
-  const user = useCurrentUser()
-  if (!user) return null
-  return user.user_metadata.avatar_url as string
 }
