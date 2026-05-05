@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button'
 import { useLogout } from '@/hooks/use-logout'
 
 export function LogoutButton() {
-  const logout = useLogout()
+  const { logout, isPending } = useLogout()
 
-  return <Button onClick={logout}>Logout</Button>
+  return <Button onClick={() => logout()} disabled={isPending}>
+    {isPending ? "Logging out..." : "Logout"}
+  </Button>
 }

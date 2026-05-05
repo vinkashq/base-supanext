@@ -11,7 +11,7 @@ import { EllipsisVerticalIcon, LogOutIcon } from "lucide-react"
 export default function UserMenuItem() {
   const user = useCurrentUser()
   const { isMobile } = useSidebar()
-  const logout = useLogout()
+  const { logout, isPending } = useLogout()
 
   if (!user) return null
 
@@ -37,9 +37,9 @@ export default function UserMenuItem() {
           align="end"
           sideOffset={4}
         >
-          <DropdownMenuItem onClick={logout} className="flex items-center gap-2">
+          <DropdownMenuItem onClick={() => logout()} disabled={isPending} className="flex items-center gap-2">
             <LogOutIcon className="h-4 w-4 text-muted-foreground" />
-            <span>Log out</span>
+            <span>{isPending ? "Logging out..." : "Log out"}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
