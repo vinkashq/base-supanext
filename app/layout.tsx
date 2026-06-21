@@ -41,9 +41,9 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <main className="flex flex-col grow items-center justify-center">
+          <div className="flex flex-col grow items-center justify-center">
             {children}
-          </main>
+          </div>
         </ThemeProvider>
       </body>
     </html >
