@@ -1,7 +1,8 @@
 import UsersTable from "@/components/admin/users-table"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { Suspense } from "react"
 
-export default async function Page() {
+async function UsersList() {
   const supabase = await createAdminClient()
 
   // Fetch the list of users from Supabase Auth admin
@@ -33,7 +34,7 @@ export default async function Page() {
   })
 
   return (
-    <div className="flex-1 p-6 space-y-6 bg-background">
+    <>
       <div className="flex items-center justify-between border-b pb-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Users</h1>
@@ -49,6 +50,33 @@ export default async function Page() {
       </div>
 
       <UsersTable initialUsers={users} error={errorMessage} />
+    </>
+  )
+}
+
+export default function Page() {
+  return (
+    <div className="flex-1 p-6 space-y-6 bg-background">
+      <Suspense
+        fallback={
+          <>
+            <div className="flex items-center justify-between border-b pb-4">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Loading users...
+                </p>
+              </div>
+            </div>
+            <div className="space-y-4 animate-pulse">
+              <div className="h-10 bg-muted rounded w-full" />
+              <div className="h-64 bg-muted rounded w-full" />
+            </div>
+          </>
+        }
+      >
+        <UsersList />
+      </Suspense>
     </div>
   )
 }
