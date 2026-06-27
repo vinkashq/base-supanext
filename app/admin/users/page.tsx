@@ -1,20 +1,36 @@
-import { createClient } from "@/lib/supabase/server"
 import UsersTable from "@/components/admin/users-table"
+import { createAdminClient } from "@/lib/supabase/admin"
 
 export default async function Page() {
-  const supabase = await createClient()
-
-  // Authenticate user and verify claims as done in the dashboard
-  const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
-  if (claimsError || !claimsData?.claims) {
-    throw new Error("Unauthorized")
-  }
+  const supabase = await createAdminClient()
 
   // Fetch the list of users from Supabase Auth admin
   const { data, error } = await supabase.auth.admin.listUsers()
 
   const users = data?.users || []
   const errorMessage = error?.message
+  users.sort((a, b) => {
+    const lastSignInA = a.last_sign_in_at
+    const lastSignInB = b.last_sign_in_at
+
+    // If both have last_sign_in_at, compare them (newest first)
+    if (lastSignInA && lastSignInB) {
+      return lastSignInB.localeCompare(lastSignInA)
+    }
+
+    // If only b has last_sign_in_at, b comes first (newer)
+    if (lastSignInA) {
+      return -1
+    }
+
+    // If only a has last_sign_in_at, a comes first (newer)
+    if (lastSignInB) {
+      return 1
+    }
+
+    // If neither has last_sign_in_at, maintain relative order or use ID
+    return 0
+  })
 
   return (
     <div className="flex-1 p-6 space-y-6 bg-background">
