@@ -5,5 +5,4 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "cron"
-      cronjob: "0 0 */14 * *"
+      interval: "monthly"
