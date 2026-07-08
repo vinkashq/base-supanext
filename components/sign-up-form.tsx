@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/browser'
 import { Button } from '@/components/ui/button'
 import {
   Card,
