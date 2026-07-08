@@ -19,11 +19,18 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { ArrowUpIcon, GlobeIcon, ImageIcon, MessageCircleDashedIcon, PaperclipIcon, PlusIcon, RotateCcwIcon, TelescopeIcon } from "lucide-react"
+import { useState } from "react"
+import { useChat } from '@ai-sdk/react'
+import { GenkitChatTransport } from '@genkit-ai/vercel-ai/client'
 
 export default function Page() {
-  const messages = [{ id: "1", role: "user", content: "Hello" }, { id: "2", role: "ai", content: "Hello 2" }]
-  const nextMessage = null
-  const isBusy = false
+  const { messages, sendMessage, status } = useChat({
+    transport: new GenkitChatTransport({ url: '/api/agent' }),
+  })
+
+  const [message, setMessage] = useState('')
+  const isBusy = ["submitted", "streaming"].includes(status)
+
   return (
     <MessageScrollerProvider autoScroll>
       <div className="relative flex flex-col gap-4 flex-1">
@@ -70,7 +77,11 @@ export default function Page() {
                               align={message.role === "user" ? "end" : "start"}
                               variant={message.role === "user" ? "muted" : "ghost"}
                             >
-                              <BubbleContent>{message.content}</BubbleContent>
+                              {message.parts.map((part, index) => (
+                                <BubbleContent key={index}>
+                                  {part.type === "text" && part.text}
+                                </BubbleContent>
+                              ))}
                             </Bubble>
                           </MessageContent>
                         </Message>
@@ -86,17 +97,22 @@ export default function Page() {
             <form
               onSubmit={(e) => {
                 e.preventDefault()
-                if (!nextMessage || isBusy) {
+                if (!message || isBusy) {
                   return
                 }
-                // void sendMessage(nextMessage)
+                sendMessage({ text: message })
+                setMessage("")
               }}
               className="w-full"
             >
               <InputGroup className="border-0 bg-transparent dark:bg-transparent">
-                <Textarea autoFocus placeholder="Type your message here..." className="h-24 w-full px-3 py-2.5 bg-transparent dark:bg-transparent resize-none border-0 focus-visible:ring-0">
-                  {nextMessage ? nextMessage : ""}
-                </Textarea>
+                <Textarea
+                  autoFocus
+                  placeholder="Type your message here..."
+                  className="h-24 w-full px-3 py-2.5 bg-transparent dark:bg-transparent resize-none border-0 focus-visible:ring-0"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
                 <InputGroupAddon align="block-end" className="pt-1">
                   <DropdownMenu>
                     <DropdownMenuTrigger render={<InputGroupButton aria-label="Add files" type="button" size="icon-sm" variant="outline"><PlusIcon /></InputGroupButton>} />
@@ -129,6 +145,7 @@ export default function Page() {
                     variant="default"
                     size="icon-sm"
                     className="ml-auto"
+                    disabled={isBusy}
                   >
                     <ArrowUpIcon />
                     <span className="sr-only">Send</span>
@@ -139,6 +156,6 @@ export default function Page() {
           </CardFooter>
         </Card>
       </div>
-    </MessageScrollerProvider>
+    </MessageScrollerProvider >
   )
 }
