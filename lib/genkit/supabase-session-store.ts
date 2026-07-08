@@ -12,15 +12,15 @@ type SnapshotLookup = {
   context?: SessionStoreOptions['context']
 }
 
-class SupabaseSessionStore<S> implements SessionStore<S> {
-  private supabaseClient: SupabaseClient
+export default class SupabaseSessionStore<S> implements SessionStore<S> {
+  private supabase: SupabaseClient
 
-  constructor(client: SupabaseClient) {
-    this.supabaseClient = client
+  constructor(supabaseClient: SupabaseClient) {
+    this.supabase = supabaseClient
   }
 
   async getUserId() {
-    const response = await this.supabaseClient.auth.getUser()
+    const response = await this.supabase.auth.getUser()
     if (response.error) {
       throw response.error
     }
@@ -37,18 +37,27 @@ class SupabaseSessionStore<S> implements SessionStore<S> {
     opts: SnapshotLookup,
   ): Promise<SessionSnapshot<S> | undefined> {
     const userId = await this.getUserId()
-    const { data, error } = await this.supabaseClient
-      .from('sessions')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('session_id', opts.sessionId)
-      .single()
+    let query = this.supabase
+      .from('snapshots')
+      .select('data')
+      .eq('session.user_id', userId)
 
-    if (error) {
-      throw error
+    if (opts.snapshotId) {
+      query = query.eq('id', opts.snapshotId)
+    } else if (opts.sessionId) {
+      query = query
+        .eq('session_id', opts.sessionId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+    } else {
+      throw new Error('Must provide either snapshotId or sessionId')
     }
 
-    return data
+    const { data, error } = await query.single()
+
+    if (error || !data) return undefined
+
+    return data.data as SessionSnapshot<S>
   }
 
   async saveSnapshot(
@@ -56,19 +65,37 @@ class SupabaseSessionStore<S> implements SessionStore<S> {
     mutator: SnapshotMutator<S>,
     options?: SessionStoreOptions,
   ): Promise<string | null> {
-    const userId = await this.getUserId()
-    const { data, error } = await this.supabaseClient
-      .from('sessions')
-      .upsert({
-        user_id: userId,
-        session_id: options?.sessionId,
-        context: options?.context,
-      })
-    if (error) {
-      throw error
+    let currentSnapshot: SessionSnapshot<S> | undefined = undefined
+    if (snapshotId) {
+      currentSnapshot = await this.getSnapshot({ snapshotId, context: options?.context })
     }
 
-    return data
+    const nextSnapshot = await mutator(currentSnapshot)
+    if (!nextSnapshot) return null
+
+    const idToSave = snapshotId ?? nextSnapshot.snapshotId ?? crypto.randomUUID()
+    const finalSnapshot = { ...nextSnapshot, id: idToSave }
+
+    const { error: sessionError } = await this.supabase.from('sessions').upsert({
+      id: finalSnapshot.sessionId,
+      user_id: options?.context?.auth?.uid
+    })
+
+    if (sessionError) {
+      throw new Error(`Failed to create/update session: ${sessionError.message}`)
+    }
+
+    const { error: snapshotError } = await this.supabase.from('snapshots').upsert({
+      id: idToSave,
+      session_id: finalSnapshot.sessionId,
+      data: finalSnapshot,
+    })
+
+    if (snapshotError) {
+      throw new Error(`Failed to save snapshot: ${snapshotError.message}`)
+    }
+
+    return idToSave
   }
 
   onSnapshotStateChange(
@@ -76,6 +103,27 @@ class SupabaseSessionStore<S> implements SessionStore<S> {
     callback: (snapshot: SessionSnapshot<S>) => void,
     options?: SessionStoreOptions,
   ): void | (() => void) {
-    return () => { }
+    const channel = this.supabase
+      .channel(`genkit_snapshot_${snapshotId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'snapshots',
+          filter: `id=eq.${snapshotId}`,
+        },
+        (payload) => {
+          const newData = payload.new as { data?: any } | null
+          if (newData && newData.data) {
+            callback(newData.data as SessionSnapshot<S>)
+          }
+        }
+      )
+      .subscribe()
+
+    return () => {
+      this.supabase.removeChannel(channel)
+    }
   }
 }
