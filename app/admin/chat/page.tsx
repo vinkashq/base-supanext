@@ -19,13 +19,20 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { ArrowUpIcon, GlobeIcon, ImageIcon, MessageCircleDashedIcon, PaperclipIcon, PlusIcon, RotateCcwIcon, TelescopeIcon } from "lucide-react"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useChat } from '@ai-sdk/react'
 import { GenkitChatTransport } from '@genkit-ai/vercel-ai/client'
 
 export default function Page() {
+  const transport = useMemo(
+    () => new GenkitChatTransport({ url: '/api/admin/ai/chat' }),
+    []
+  )
+  const chatId = useMemo(() => crypto.randomUUID(), [])
+
   const { messages, sendMessage, status } = useChat({
-    transport: new GenkitChatTransport({ url: '/api/agent' }),
+    id: chatId,
+    transport,
   })
 
   const [message, setMessage] = useState('')
@@ -107,6 +114,7 @@ export default function Page() {
             >
               <InputGroup className="border-0 bg-transparent dark:bg-transparent">
                 <Textarea
+                  id="prompt"
                   autoFocus
                   placeholder="Type your message here..."
                   className="h-24 w-full px-3 py-2.5 bg-transparent dark:bg-transparent resize-none border-0 focus-visible:ring-0"
