@@ -22,6 +22,7 @@ import { ArrowUpIcon, GlobeIcon, ImageIcon, MessageCircleDashedIcon, PaperclipIc
 import { useMemo, useState } from "react"
 import { useChat } from '@ai-sdk/react'
 import { GenkitChatTransport } from '@genkit-ai/vercel-ai/client'
+import Markdown from "@/components/markdown"
 
 export default function Page() {
   const transport = useMemo(
@@ -86,7 +87,7 @@ export default function Page() {
                             >
                               {message.parts.map((part, index) => (
                                 <BubbleContent key={index}>
-                                  {part.type === "text" && part.text}
+                                  {part.type === "text" && (<Markdown className="flex flex-col gap-4" text={part.text} />)}
                                 </BubbleContent>
                               ))}
                             </Bubble>

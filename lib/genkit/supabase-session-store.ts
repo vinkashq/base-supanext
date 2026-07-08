@@ -5,6 +5,7 @@ import type {
   SnapshotMutator,
 } from 'genkit/beta'
 import { SupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '../supabase/server'
 
 type SnapshotLookup = {
   snapshotId?: string
@@ -13,16 +14,25 @@ type SnapshotLookup = {
 }
 
 export default class SupabaseSessionStore<S> implements SessionStore<S> {
-  private supabase: SupabaseClient
+  private schema: string
+  private _supabase: SupabaseClient<any, "public", string, any, any> | null = null
 
-  constructor(supabaseClient: SupabaseClient) {
-    this.supabase = supabaseClient
+  constructor(schema: string = "genkit") {
+    this.schema = schema
+  }
+
+  async getSupabase() {
+    if (!this._supabase) {
+      this._supabase = await createClient(this.schema)
+    }
+    return this._supabase
   }
 
   async getUserId() {
-    const response = await this.supabase.auth.getUser()
+    const supabase = await this.getSupabase()
+    const response = await supabase.auth.getUser()
     if (response.error) {
-      throw response.error
+      throw new Error(response.error.message)
     }
 
     const user = response.data.user
@@ -36,8 +46,9 @@ export default class SupabaseSessionStore<S> implements SessionStore<S> {
   async getSnapshot(
     opts: SnapshotLookup,
   ): Promise<SessionSnapshot<S> | undefined> {
-    const userId = await this.getUserId()
-    let query = this.supabase
+    const userId = opts.context?.auth?.uid || await this.getUserId()
+    const supabase = await this.getSupabase()
+    let query = supabase
       .from('snapshots')
       .select('data')
       .eq('session.user_id', userId)
@@ -76,16 +87,18 @@ export default class SupabaseSessionStore<S> implements SessionStore<S> {
     const idToSave = snapshotId ?? nextSnapshot.snapshotId ?? crypto.randomUUID()
     const finalSnapshot = { ...nextSnapshot, id: idToSave }
 
-    const { error: sessionError } = await this.supabase.from('sessions').upsert({
+    const userId = options?.context?.auth?.uid || await this.getUserId()
+    const supabase = await this.getSupabase()
+    const { error: sessionError } = await supabase.from('sessions').upsert({
       id: finalSnapshot.sessionId,
-      user_id: options?.context?.auth?.uid
+      user_id: userId
     })
 
     if (sessionError) {
       throw new Error(`Failed to create/update session: ${sessionError.message}`)
     }
 
-    const { error: snapshotError } = await this.supabase.from('snapshots').upsert({
+    const { error: snapshotError } = await supabase.from('snapshots').upsert({
       id: idToSave,
       session_id: finalSnapshot.sessionId,
       data: finalSnapshot,
@@ -103,7 +116,12 @@ export default class SupabaseSessionStore<S> implements SessionStore<S> {
     callback: (snapshot: SessionSnapshot<S>) => void,
     options?: SessionStoreOptions,
   ): void | (() => void) {
-    const channel = this.supabase
+    const supabase = this._supabase
+    if (!supabase) {
+      throw new Error('Supabase is not initialized. Make sure to call getSupabase() before using this method.')
+    }
+
+    const channel = supabase
       .channel(`genkit_snapshot_${snapshotId}`)
       .on(
         'postgres_changes',
@@ -123,7 +141,7 @@ export default class SupabaseSessionStore<S> implements SessionStore<S> {
       .subscribe()
 
     return () => {
-      this.supabase.removeChannel(channel)
+      supabase.removeChannel(channel)
     }
   }
 }
