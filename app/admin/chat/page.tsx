@@ -23,6 +23,7 @@ import { useMemo, useState } from "react"
 import { useChat } from '@ai-sdk/react'
 import { GenkitChatTransport } from '@genkit-ai/vercel-ai/client'
 import Markdown from "@/components/markdown"
+import { Sidebar, SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
 export default function Page() {
   const transport = useMemo(
@@ -165,6 +166,6 @@ export default function Page() {
           </CardFooter>
         </Card>
       </div>
-    </MessageScrollerProvider >
+    </MessageScrollerProvider>
   )
 }
