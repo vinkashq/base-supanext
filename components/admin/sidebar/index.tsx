@@ -4,6 +4,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -11,14 +12,34 @@ import {
 } from "@/components/ui/sidebar"
 import UserMenuItem from "./user-menu-item"
 import Link from "next/link"
-import { Users2Icon, UsersIcon } from "lucide-react"
+import { ChevronDownIcon, MessageCircleIcon, Users2Icon, UsersIcon } from "lucide-react"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 export default function AdminSidebar() {
   return (
     <Sidebar variant="inset" collapsible="offcanvas">
       <SidebarHeader />
       <SidebarContent>
-        <SidebarGroup></SidebarGroup>
+        <Collapsible defaultOpen className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel render={<CollapsibleTrigger />}>
+              AI
+              <ChevronDownIcon className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+            </SidebarGroupLabel>
+            <CollapsibleContent>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton render={<Link href="/admin/chat" />}>
+                      <MessageCircleIcon />
+                      Chat
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </CollapsibleContent>
+          </SidebarGroup>
+        </Collapsible>
         <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
