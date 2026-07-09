@@ -122,7 +122,7 @@ export default function Session({ sessionId }: SessionProps) {
                 id="prompt"
                 autoFocus
                 placeholder="Type your message here..."
-                className="h-24 w-full px-3 py-2.5 bg-transparent dark:bg-transparent resize-none border-0 focus-visible:ring-0"
+                className="[field-sizing:content] min-h-10 w-full px-3 py-2.5 bg-transparent dark:bg-transparent resize-none border-0 focus-visible:ring-0"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
