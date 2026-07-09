@@ -4,3 +4,10 @@ allowBuilds:
   protobufjs: true
   sharp: true
   unrs-resolver: true
+
+overrides:
+  "hono": "^4.12.25"
+  "qs": "^6.15.2"
+  "postcss": "^8.5.10"
+  "js-yaml": "^4.2.0"
+  "ws": "^8.21.0"
