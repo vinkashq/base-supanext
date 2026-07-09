@@ -20,7 +20,6 @@ export default function MessageBubble({ message, index }: MessageProps) {
     <MessageScrollerItem
       messageId={message.id}
       scrollAnchor={message.role === "user"}
-      className={cn("", index === 0 && "mt-4")}
     >
       <Message>
         <MessageContent>

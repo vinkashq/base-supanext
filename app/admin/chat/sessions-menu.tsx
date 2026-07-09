@@ -3,7 +3,7 @@
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { getSessions } from "./actions"
 import { useEffect, useState } from "react"
-import { SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import Link from "next/link"
 
 export default function SessionsMenu() {
@@ -29,6 +29,7 @@ export default function SessionsMenu() {
 
   return (
     <SidebarGroupContent>
+      <SidebarGroupLabel className="uppercase">Chats</SidebarGroupLabel>
       <SidebarMenu>
         <SidebarMenuItem>
           {sessions.map((session) => (

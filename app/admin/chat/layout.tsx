@@ -2,17 +2,18 @@ import { Sidebar, SidebarContent, SidebarHeader, SidebarInset, SidebarMenuButton
 import { PlusIcon } from "lucide-react"
 import Link from "next/link"
 import SessionsMenu from "./sessions-menu"
+import { Button } from "@/components/ui/button"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="min-h-0 flex-1">
       <Sidebar
         collapsible="none"
-        className="sticky top-0 hidden h-svh border-l lg:flex"
+        className="border-l border-t lg:flex"
       >
-        <SidebarHeader>
+        <SidebarHeader className="my-4">
           <Link href="/admin/chat">
-            <SidebarMenuButton variant="outline" className="justify-center">
+            <SidebarMenuButton className="justify-center" render={<Button />}>
               <PlusIcon />
               New Chat
             </SidebarMenuButton>

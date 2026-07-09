@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AdminSidebar />
-      <SidebarInset>
+      <SidebarInset className="max-h-[calc(100vh-16px)]">
         <AdminHeader />
         {children}
       </SidebarInset>

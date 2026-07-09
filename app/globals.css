@@ -134,3 +134,7 @@
 .markdown {
   @apply flex flex-col gap-4;
 }
+
+.message-bubbles {
+  @apply my-4
+}
