@@ -132,7 +132,5 @@
 }
 
 .markdown {
-  p {
-    @apply my-4;
-  }
+  @apply flex flex-col gap-4;
 }

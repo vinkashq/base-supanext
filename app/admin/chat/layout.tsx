@@ -1,7 +1,7 @@
 import { Sidebar, SidebarContent, SidebarHeader, SidebarInset, SidebarMenuButton, SidebarProvider } from "@/components/ui/sidebar"
 import { PlusIcon } from "lucide-react"
 import Link from "next/link"
-import Sessions from "./sessions"
+import SessionsMenu from "./sessions-menu"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Link>
         </SidebarHeader>
         <SidebarContent>
-          <Sessions />
+          <SessionsMenu />
         </SidebarContent>
       </Sidebar>
       <SidebarInset>

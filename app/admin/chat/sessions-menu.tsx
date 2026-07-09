@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import Link from "next/link"
 
-export default function Sessions() {
+export default function SessionsMenu() {
   const currentUser = useCurrentUser()
   const [sessions, setSessions] = useState<any[] | null>(null)
 
