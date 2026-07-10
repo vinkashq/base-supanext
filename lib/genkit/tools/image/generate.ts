@@ -1,3 +1,5 @@
+"use server"
+
 import googleImagen from "@/lib/genkit/google/imagen"
 import { z } from "genkit"
 import { getSharp } from "next/dist/server/image-optimizer"
@@ -7,6 +9,8 @@ import { writeFile, unlink } from 'fs/promises'
 import { join } from 'path'
 import { tmpdir } from 'os'
 import { createClient } from "@/lib/supabase/server"
+
+const bucketName = process.env.SUPABASE_IMAGES_BUCKET || "images"
 
 const generateId = () => {
   return crypto.randomUUID()
@@ -65,7 +69,7 @@ const generateImage = googleImagen.defineTool(
       throw new Error('Failed to parse the data URL from image generation.')
     }
 
-    const imageBuffer: Buffer = parsedData.body
+    const imageBuffer = Buffer.from(parsedData.body)
     const mimeType = parsedData.mimeType.toString()
     const extension = mimeType.split('/')[1] || "png"
 
@@ -74,6 +78,11 @@ const generateImage = googleImagen.defineTool(
     const sharp = getSharp(1)
     const imageMetadata = await sharp(imageBuffer).metadata()
     const { size, width, height } = imageMetadata
+
+    if (size === undefined || width === undefined || height === undefined) {
+      throw new Error('Image metadata is missing width, height, or size.')
+    }
+
     const aspectRatio = width / height
 
     type ColorSwatch = {
@@ -134,7 +143,7 @@ const generateImage = googleImagen.defineTool(
     const supabase = await createClient()
     const { data, error } = await supabase
       .storage
-      .from('images')
+      .from(bucketName)
       .upload(storagePath, imageBuffer, {
         contentType: mimeType,
         cacheControl: '3600',
@@ -153,7 +162,7 @@ const generateImage = googleImagen.defineTool(
 
     return {
       imageId,
-      bucketName: 'images',
+      bucketName,
       storagePath,
       fileName,
       mimeType,
