@@ -14,6 +14,7 @@ export default function AccountMenu() {
       <DropdownMenuContent>
         <DropdownMenuGroup>
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => logout()} disabled={isPending}>{isPending ? 'Logging out...' : 'Logout'}</DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
