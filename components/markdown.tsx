@@ -11,5 +11,5 @@ type MarkdownProps = {
 
 export default function Markdown({ text, className, ...props }: MarkdownProps) {
   const html = md.render(text)
-  return <div dangerouslySetInnerHTML={{ __html: html }} className={cn("markdown", className)} {...props} />
+  return <div dangerouslySetInnerHTML={{ __html: html }} className={cn("typeset typeset-docs max-w-full", className)} {...props} />
 }

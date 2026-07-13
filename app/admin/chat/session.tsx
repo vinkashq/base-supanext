@@ -19,7 +19,6 @@ import { ArrowUpIcon, GlobeIcon, ImageIcon, MessageCircleDashedIcon, PaperclipIc
 import { useMemo, useState } from "react"
 import { useChat } from '@ai-sdk/react'
 import { GenkitChatTransport, messagesFromSnapshot } from '@genkit-ai/vercel-ai/client'
-import Markdown from "@/components/markdown"
 import { getSessionMessages } from "./actions"
 import { useEffect } from "react"
 import MessageBubble from "./message-bubble"
