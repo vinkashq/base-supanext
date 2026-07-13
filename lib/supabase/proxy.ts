@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
 const adminPaths = ['/admin', '/api/admin']
+const userPaths = ['/account']
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -34,7 +35,7 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims()
   const user = data?.claims
   const pathname = request.nextUrl.pathname
-  const protectedPaths = adminPaths
+  const protectedPaths = [...adminPaths, ...userPaths]
 
   if (
     pathname !== "/" &&
