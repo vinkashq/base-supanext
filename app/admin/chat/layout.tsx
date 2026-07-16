@@ -3,6 +3,8 @@ import { PlusIcon } from "lucide-react"
 import Link from "next/link"
 import SessionsMenu from "./sessions-menu"
 import { Button } from "@/components/ui/button"
+import { Suspense } from "react"
+import { Spinner } from "@/components/ui/spinner"
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -24,7 +26,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </SidebarContent>
       </Sidebar>
       <SidebarInset>
-        {children}
+        <Suspense fallback={
+          <div className="flex h-full w-full items-center justify-center p-8">
+            <Spinner className="size-6 text-muted-foreground" />
+          </div>
+        }>
+          {children}
+        </Suspense>
       </SidebarInset>
     </SidebarProvider >
   )
