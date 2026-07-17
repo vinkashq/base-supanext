@@ -13,13 +13,11 @@ import {
   MessageScrollerViewport,
 } from "@/components/ui/message-scroller"
 import { Textarea } from "@/components/ui/textarea"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
 import { ArrowUpIcon, GlobeIcon, ImageIcon, MessageCircleDashedIcon, PaperclipIcon, PlusIcon, RotateCcwIcon, TelescopeIcon } from "lucide-react"
 import { useMemo, useState } from "react"
 import { useChat } from '@ai-sdk/react'
 import { GenkitChatTransport, messagesFromSnapshot } from '@genkit-ai/vercel-ai/client'
-import { getSessionMessages } from "./actions"
+import { getSession, getSessionMessages, setSessionTitle } from "./actions"
 import { useEffect } from "react"
 import MessageBubble from "./message-bubble"
 
@@ -33,6 +31,8 @@ export default function Session({ sessionId }: SessionProps) {
     []
   )
 
+  const [title, setTitle] = useState("Loading...")
+  const [session, setSession] = useState<any>()
   const { messages, sendMessage, status, setMessages } = useChat({
     id: sessionId,
     transport,
@@ -49,6 +49,24 @@ export default function Session({ sessionId }: SessionProps) {
         const uiMessages = messagesFromSnapshot(genkitMessages)
         setMessages(uiMessages)
         setLoading(false)
+        getSession(sessionId)
+          .then((session) => {
+            setSession(session)
+            if (session) {
+              if (session.title) {
+                setTitle(session.title)
+              } else {
+                if (messages.length >= 2) {
+                  setTitle("Generating Title...")
+                  setSessionTitle(sessionId).then(setTitle)
+                } else {
+                  setTitle("New Chat")
+                }
+              }
+            } else {
+              setTitle("New Chat")
+            }
+          })
       })
       .catch((err) => {
         console.error("Failed to load session messages:", err)
@@ -56,20 +74,15 @@ export default function Session({ sessionId }: SessionProps) {
       })
   }, [sessionId, setMessages])
 
+  useEffect(() => {
+    
+  }, [session, messages])
+
   return (
     <MessageScrollerProvider autoScroll>
       <Card className="mx-auto gap-0 rounded-t-none w-full flex-1 max-h-svh">
         <CardHeader className="gap-1 border-b">
-          <CardTitle>New Chat</CardTitle>
-          <CardDescription>How can I help you today?</CardDescription>
-          <CardAction>
-            <Tooltip>
-              <TooltipTrigger render={<Button variant="outline" size="icon" aria-label="Reset conversation"><RotateCcwIcon /></Button>} />
-              <TooltipContent>
-                Reset conversation
-              </TooltipContent>
-            </Tooltip>
-          </CardAction>
+          <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent className="flex-1 overflow-hidden">
           {loading ? (
