@@ -34,7 +34,7 @@ export default function SessionsMenu() {
         <SidebarMenuItem>
           {sessions.map((session) => (
             <Link key={session.id} href={`/admin/chat/${session.id}`}>
-              <SidebarMenuButton className="cursor-pointer truncate">{new Date(session.created_at).toLocaleString()}</SidebarMenuButton>
+              <SidebarMenuButton className="cursor-pointer truncate">{session.title || new Date(session.created_at).toLocaleString()}</SidebarMenuButton>
             </Link>
           ))}
         </SidebarMenuItem>
